@@ -44,6 +44,7 @@ loss_fn = nn.CrossEntropyLoss()
 optimizer = AdamW(model.parameters(), lr=lr_m)
 device = torch.device("cuda" if torch.cuda.is_available else "cpu")
 model.to(device)
+q.to(device)
 model.train()
 
 # train loop
