@@ -39,12 +39,12 @@ q = torch.tensor([0.333, 0.333, 0.333])
 lr_q = 0.01
 lr_m = 1e-5
 model = StanceDetector(model_name)
-num_iterations = 300
+num_iterations = 3000
 loss_fn = nn.CrossEntropyLoss()
 optimizer = AdamW(model.parameters(), lr=lr_m)
 device = torch.device("cuda" if torch.cuda.is_available else "cpu")
 model.to(device)
-q.to(device)
+q = q.to(device)
 model.train()
 
 # train loop
@@ -74,11 +74,11 @@ for iteration in range(num_iterations):
     loss.backward()
     optimizer.step()
 
-    if g == 2:
-        print("LOSS: ", loss.item())
-        print("Group Weight: ", q[g])
-
-    #print(q)
+    if iteration % 50 == 0:
+        print(f"Group WEIGHTS: {q}")
+        print(f"Iteration GROUP: {g}")
+        print(f"Iteration LOSS: {loss.item()}")
+        print("==============================")
 
 
     
