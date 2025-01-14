@@ -42,6 +42,8 @@ model = StanceDetector(model_name)
 num_iterations = 300
 loss_fn = nn.CrossEntropyLoss()
 optimizer = AdamW(model.parameters(), lr=lr_m)
+device = torch.device("cuda" if torch.cuda.is_available else "cpu")
+model.to(device)
 model.train()
 
 # train loop
@@ -55,9 +57,9 @@ for iteration in range(num_iterations):
         tokenized, labels = next(iter(fm_dataloader))
 
 
-    input_ids = tokenized["input_ids"].squeeze(1)
-    attention_mask = tokenized["attention_mask"].squeeze(1)
-    labels = labels.squeeze(-1)
+    input_ids = tokenized["input_ids"].squeeze(1).to(device)
+    attention_mask = tokenized["attention_mask"].squeeze(1).to(device)
+    labels = labels.squeeze(-1).to(device)
     y_pred = model(input_ids, attention_mask)
     loss = loss_fn(y_pred, labels)
 
